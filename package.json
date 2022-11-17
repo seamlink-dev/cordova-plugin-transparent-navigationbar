@@ -1,9 +1,9 @@
 {
-  "name": "cordova-plugin-transparent-navigationbar-jonsangar",
+  "name": "@jonsangar/cordova-plugin-transparent-navigationbar",
   "version": "1.1.0",
   "description": "Cordova Transparent NavigationBar Plugin",
   "cordova": {
-    "id": "cordova-plugin-transparent-navigationbar-jonsangar",
+    "id": "@jonsangar/cordova-plugin-transparent-navigationbar",
     "platforms": [
       "android"
     ]
