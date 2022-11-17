@@ -24,6 +24,9 @@ var TransparentNavigationBar = {
     },
     setNavigationBarButtonsColor: function (color) {
         exec(null, null, 'TransparentNavigationBar', 'setNavigationBarButtonsColor', [color]);
+    },
+    getNavigationBarInteractionMode: function (success, error) {
+        exec(success, error, "TransparentNavigationBar", "getNavigationBarInteractionMode");
     }
 };
 

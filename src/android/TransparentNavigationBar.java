@@ -22,6 +22,8 @@ import android.os.Build;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.content.Context;
+import android.content.res.Resources;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaArgs;
@@ -35,6 +37,19 @@ import org.json.JSONException;
 import java.io.InvalidObjectException;
 
 public class TransparentNavigationBar extends CordovaPlugin {
+    /**
+     * Classic three-button navigation (Back, Home, Recent Apps)
+     */
+    final int NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON = 0;
+    /**
+     * Two-button navigation (Android P navigation mode: Back, combined Home and Recent Apps)
+     */
+    final int NAVIGATION_BAR_INTERACTION_MODE_TWO_BUTTON = 1;
+    /**
+     * Full screen gesture mode (introduced with Android Q)
+     */
+    final int NAVIGATION_BAR_INTERACTION_MODE_GESTURE = 2;
+
     private static final String TAG = "TransparentNavigationBar";
 
     private final String PREFERENCES_TRANSPARENT_NAVIGATION_BAR = "TransparentNavigationBar";
@@ -62,7 +77,6 @@ public class TransparentNavigationBar extends CordovaPlugin {
 
     @Override
     public boolean execute(final String action, final CordovaArgs args, final CallbackContext callbackContext) {
-        LOG.v(TAG, "Executing: " + action);
         final Activity activity = this.cordova.getActivity();
         final Window window = activity.getWindow();
 
@@ -88,11 +102,40 @@ public class TransparentNavigationBar extends CordovaPlugin {
             return true;
         }
 
+        if("getNavigationBarInteractionMode".equals(action)) {
+            int navigationMode = 0;
+
+            try {
+                navigationMode = this.getNavigationBarInteractionMode();
+            } catch (Exception ignore) {
+                LOG.e(TAG, "Failed to execute getNavigationBarInteractionMode on SDK: " + Build.VERSION.SDK_INT);
+                // callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, navigationMode));
+            }
+
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, navigationMode));
+            return true;
+        }
+
+
         return false;
     }
 
     private Window getWindow() {
         return cordova.getActivity().getWindow();
+    }
+
+    private Context getContext() { return cordova.getContext(); }
+
+    private int getNavigationBarInteractionMode() {
+        int navigationMode = 0;
+
+        Context context = this.getContext();
+
+        final Resources resources = context.getResources();
+        final int resourceId = resources.getIdentifier("config_navBarInteractionMode", "integer", "android");
+        navigationMode = resourceId > 0 ? resources.getInteger(resourceId) : NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON;
+
+        return navigationMode;
     }
 
     private void setNavigationBarButtonsColor(String color) throws InvalidObjectException {
@@ -111,17 +154,32 @@ public class TransparentNavigationBar extends CordovaPlugin {
     }
 
     private void setNavigationBarTransparent() {
+
         final int RETRO_COMPATIBLE_FLAG_TRANSLUCENT_NAVIGATION = 0x08000000;
         final int RETRO_COMPATIBLE_FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS = 0x80000000;
+        int navigationMode = 0;
 
         Window window = this.getWindow();
-        window.addFlags(RETRO_COMPATIBLE_FLAG_TRANSLUCENT_NAVIGATION);
-        window.addFlags(RETRO_COMPATIBLE_FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        Context context = this.getContext();
 
-        try {
-            window.getClass().getDeclaredMethod("setNavigationBarColor", int.class).invoke(window, Color.TRANSPARENT);
-        } catch (Exception ignore) {
-            LOG.e(TAG, "Failed to execute window.setNavigationBarColor on SDK: " + Build.VERSION.SDK_INT);
+        navigationMode = this.getNavigationBarInteractionMode();
+
+        // Only affects without gestures actives
+        if(navigationMode < 2) {
+            try {
+                window.getClass().getDeclaredMethod("setNavigationBarColor", int.class).invoke(window, Color.BLUE);
+                window.getClass().getDeclaredMethod("setNavigationBarContrastEnforced", int.class).invoke(window, false);
+            } catch (Exception ignore) {
+                LOG.e(TAG, "Failed to execute window.setNavigationBarColor on SDK: " + Build.VERSION.SDK_INT);
+            }
+
+            window.addFlags(RETRO_COMPATIBLE_FLAG_TRANSLUCENT_NAVIGATION);
+            window.addFlags(RETRO_COMPATIBLE_FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            // Uncomment to force 100% transparency
+            // window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
+
     }
+
 }

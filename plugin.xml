@@ -17,13 +17,13 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova-plugin-transparent-navigationbar"
-        version="1.0.0">
+        id="cordova-plugin-transparent-navigationbar-jonsangar"
+        version="1.1.0">
 
     <name>TransparentNavigationBar</name>
     <description>Cordova Transparent Navigationbar Plugin</description>
 
-    <repo>https://github.com/rdcavanha/cordova-plugin-transparent-navigationbar</repo>
+    <repo>https://github.com/jonsangar/cordova-plugin-transparent-navigationbar.git</repo>
 
     <keywords>cordova,navigationbar,transparent</keywords>
 

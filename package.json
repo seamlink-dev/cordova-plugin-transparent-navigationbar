@@ -1,16 +1,16 @@
 {
-  "name": "cordova-plugin-transparent-navigationbar",
-  "version": "1.0.0",
+  "name": "cordova-plugin-transparent-navigationbar-jonsangar",
+  "version": "1.1.0",
   "description": "Cordova Transparent NavigationBar Plugin",
   "cordova": {
-    "id": "cordova-plugin-transparent-navigationbar",
+    "id": "cordova-plugin-transparent-navigationbar-jonsangar",
     "platforms": [
       "android"
     ]
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rdcavanha/cordova-plugin-transparent-navigationbar"
+    "url": "https://github.com/jonsangar/cordova-plugin-transparent-navigationbar.git"
   },
   "keywords": [
     "cordova",
