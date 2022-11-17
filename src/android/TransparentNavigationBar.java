@@ -109,9 +109,8 @@ public class TransparentNavigationBar extends CordovaPlugin {
                 navigationMode = this.getNavigationBarInteractionMode();
             } catch (Exception ignore) {
                 LOG.e(TAG, "Failed to execute getNavigationBarInteractionMode on SDK: " + Build.VERSION.SDK_INT);
-                // callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, navigationMode));
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, Build.VERSION.SDK_INT));
             }
-
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, navigationMode));
             return true;
         }
