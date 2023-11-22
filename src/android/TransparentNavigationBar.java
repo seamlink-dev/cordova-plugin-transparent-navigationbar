@@ -42,7 +42,8 @@ public class TransparentNavigationBar extends CordovaPlugin {
      */
     final int NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON = 0;
     /**
-     * Two-button navigation (Android P navigation mode: Back, combined Home and Recent Apps)
+     * Two-button navigation (Android P navigation mode: Back, combined Home and
+     * Recent Apps)
      */
     final int NAVIGATION_BAR_INTERACTION_MODE_TWO_BUTTON = 1;
     /**
@@ -81,7 +82,8 @@ public class TransparentNavigationBar extends CordovaPlugin {
         final Window window = activity.getWindow();
 
         if ("_ready".equals(action)) {
-            boolean navigationBarVisible = (window.getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) == 0;
+            boolean navigationBarVisible = (window.getAttributes().flags
+                    & WindowManager.LayoutParams.FLAG_FULLSCREEN) == 0;
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, navigationBarVisible));
             return true;
         }
@@ -102,7 +104,7 @@ public class TransparentNavigationBar extends CordovaPlugin {
             return true;
         }
 
-        if("getNavigationBarInteractionMode".equals(action)) {
+        if ("getNavigationBarInteractionMode".equals(action)) {
             int navigationMode = 0;
 
             try {
@@ -115,7 +117,6 @@ public class TransparentNavigationBar extends CordovaPlugin {
             return true;
         }
 
-
         return false;
     }
 
@@ -123,7 +124,9 @@ public class TransparentNavigationBar extends CordovaPlugin {
         return cordova.getActivity().getWindow();
     }
 
-    private Context getContext() { return cordova.getContext(); }
+    private Context getContext() {
+        return cordova.getContext();
+    }
 
     private int getNavigationBarInteractionMode() {
         int navigationMode = 0;
@@ -132,7 +135,8 @@ public class TransparentNavigationBar extends CordovaPlugin {
 
         final Resources resources = context.getResources();
         final int resourceId = resources.getIdentifier("config_navBarInteractionMode", "integer", "android");
-        navigationMode = resourceId > 0 ? resources.getInteger(resourceId) : NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON;
+        navigationMode = resourceId > 0 ? resources.getInteger(resourceId)
+                : NAVIGATION_BAR_INTERACTION_MODE_THREE_BUTTON;
 
         return navigationMode;
     }
@@ -161,24 +165,17 @@ public class TransparentNavigationBar extends CordovaPlugin {
         Window window = this.getWindow();
         Context context = this.getContext();
 
-        navigationMode = this.getNavigationBarInteractionMode();
-
-        // Only affects without gestures actives
-        if(navigationMode < 2) {
-            try {
-                window.getClass().getDeclaredMethod("setNavigationBarColor", int.class).invoke(window, Color.BLUE);
-                window.getClass().getDeclaredMethod("setNavigationBarContrastEnforced", int.class).invoke(window, false);
-            } catch (Exception ignore) {
-                LOG.e(TAG, "Failed to execute window.setNavigationBarColor on SDK: " + Build.VERSION.SDK_INT);
-            }
-
-            window.addFlags(RETRO_COMPATIBLE_FLAG_TRANSLUCENT_NAVIGATION);
-            window.addFlags(RETRO_COMPATIBLE_FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-            // Uncomment to force 100% transparency
-            // window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        try {
+            window.getClass().getDeclaredMethod("setNavigationBarColor", int.class).invoke(window, Color.TRANSPARENT);
+            window.getClass().getDeclaredMethod("setNavigationBarContrastEnforced", int.class).invoke(window, false);
+        } catch (Exception ignore) {
+            LOG.e(TAG, "Failed to execute window.setNavigationBarColor on SDK: " + Build.VERSION.SDK_INT);
         }
 
-    }
+        window.addFlags(RETRO_COMPATIBLE_FLAG_TRANSLUCENT_NAVIGATION);
+        window.addFlags(RETRO_COMPATIBLE_FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
+        // Uncomment to force 100% transparency
+        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    }
 }
