@@ -38,9 +38,9 @@ function prepareProxy() {
                     cordova.fireWindowEvent('navigationTap');
                 }
             } else {
-                NavigationBar.isVisible = res;
+                TransparentNavigationBar.isVisible = res;
             }
-        }, null, "NavigationBar", "_ready", []);
+        }, null, "TransparentNavigationBar", "_ready", []);
     }, 0);
 }
 
