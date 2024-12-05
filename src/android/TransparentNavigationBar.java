@@ -167,7 +167,10 @@ public class TransparentNavigationBar extends CordovaPlugin {
 
         try {
             window.getClass().getDeclaredMethod("setNavigationBarColor", int.class).invoke(window, Color.TRANSPARENT);
-            window.getClass().getDeclaredMethod("setNavigationBarContrastEnforced", int.class).invoke(window, false);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                window.getClass().getDeclaredMethod("setNavigationBarContrastEnforced", int.class).invoke(window,
+                        false);
+            }
         } catch (Exception ignore) {
             LOG.e(TAG, "Failed to execute window.setNavigationBarColor on SDK: " + Build.VERSION.SDK_INT);
         }
@@ -176,6 +179,7 @@ public class TransparentNavigationBar extends CordovaPlugin {
         window.addFlags(RETRO_COMPATIBLE_FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
         // Uncomment to force 100% transparency
-        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
     }
 }

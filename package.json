@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-transparent-navigationbar",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Cordova Transparent NavigationBar Plugin",
   "cordova": {
     "id": "cordova-plugin-transparent-navigationbar",
@@ -19,16 +19,6 @@
     "ecosystem:cordova",
     "cordova-android"
   ],
-  "engines": {
-    "cordovaDependencies": {
-      "0.1.0": {
-        "cordova": ">=3.0.0"
-      },
-      "3.0.0": {
-        "cordova": ">100"
-      }
-    }
-  },
   "author": "Rodrigo Cavanha",
   "license": "Apache-2.0"
 }
